@@ -185,20 +185,6 @@
     <ResourceCompile Include="AdminSc.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Client\ProtocolClient\ProtocolClient.vcxproj">
-      <Project>{eb6a9ea3-4736-41f3-81a5-381889e3f012}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\System\ADT\ADT.vcxproj">
-      <Project>{a054a5cd-c32f-4710-a1fe-6102c6687090}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\System\CompSys\CompSys.vcxproj">
-      <Project>{c47ad857-39fc-4a84-80ef-4e37d6c2f2ed}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\ProtocolServer\ProtocolServer.vcxproj">
-      <Project>{95ecbe33-0c09-41d5-8329-3be144ecf5fe}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\Bank\Admin.dbc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
