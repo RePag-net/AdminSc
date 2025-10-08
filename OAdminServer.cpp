@@ -208,7 +208,6 @@ void __vectorcall frAufgabeExtern(COProtokollServer* pRePagServer, USHORT& usAuf
 		case CS_VIRTUALMEMORY:					if(vAdminServer->RechteKontrolle(pRePagServer, ZR_LESEN))	vAdminServer->HoleVirtualMemory(pRePagServer); break;
 		case CS_CORECONNECT:						if(vAdminServer->RechteKontrolle(pRePagServer, ZR_SONDER_1)) vAdminServer->GetCoreConnect(pRePagServer); break;
 		case CS_COREMEMORY:							if(vAdminServer->RechteKontrolle(pRePagServer, ZR_SONDER_1)) vAdminServer->GetCoreMemory(pRePagServer); break;
-		case CS_DBENCRYPTINITAL:				if(vAdminServer->RechteKontrolle(pRePagServer, ZR_SONDER_4)) vAdminServer->DBDateiEncryptInital(pRePagServer); break;
 			
 		default:
 			asEintrag = "Unbekannte externer Aufgabe von "; ZeroMem(c46IPBuffer, 46);
@@ -1101,59 +1100,6 @@ void __vectorcall COAdminServer::DBStartOptimierung(COProtokollServer* pRePagSer
 
 			if(vRePagClient->ucInfo){ 
 				if(!--ucVersuche){ pRePagServer->ucInfo = 1; char c11Zahl[11]; COStringA asEintrag("DBStartOptimierung - Fehler bei Verbindung zu Server: ");
-					asEintrag += ULONGtoCHAR(c11Zahl, ucServer); FehlerEintrag(vRePagClient, &stAdminServer, asEintrag.c_Str());
-				}
-			}
-			else ucVersuche = 0;
-			VMFreiV(vRePagClient);
-		}
-		while(ucVersuche);
-
-		if(!pRePagServer->ucInfo) pRePagServer->SendeOK();
-	}
-	pRePagServer->Senden();
-}
-//-------------------------------------------------------------------------------------------------------------------------------------------
-void __vectorcall COAdminServer::DBDateiEncryptInital(COProtokollServer* pRePagServer)
-{
-	if(pRePagServer->Empfangen()){
-		STServer* pstServer = nullptr; bool bServer_1; 
-
-		BYTE ucServer;
-		pRePagServer->Lese(&ucServer, BY_BYTE);
-		ULONG ulBytes = pRePagServer->ulBytes;
-		VMBLOCK vbBuffer = VMBlock(ulBytes);
-		pRePagServer->Lese(vbBuffer, ulBytes);
-
-		pRePagServer->NeueSendung();
-
-		switch(ucServer){
-			case 0: pstServer = &stLoginServer; bServer_1 = true; break;
-			case 1: pstServer = &stLoginServer; bServer_1 = false; break;
-			case 2: pstServer = &vstProgServer[SRV_PROGSERVER]; bServer_1 = true; break;
-			case 3: pstServer = &vstProgServer[SRV_PROGSERVER]; bServer_1 = false; break;
-		}
-
-		BYTE ucVersuche = 2; COProtokollClient* vRePagClient;
-		do{
-			vRePagClient = COProtokollClientV(vmProtokoll, pstServer, NULL);
-
-			vRePagClient->Schreibe(vbBuffer, ulBytes);
-
-			bool bSendeAufgabe;
-			if(bServer_1) bSendeAufgabe = vRePagClient->SendeAufgabe_Server_1(CS_DBENCRYPTINITAL, CS_VINTERN);
-			else bSendeAufgabe = vRePagClient->SendeAufgabe_Server_2(CS_DBENCRYPTINITAL, CS_VINTERN);
-
-			if(bSendeAufgabe){
-				if(vRePagClient->Senden()){
-					if(vRePagClient->Empfangen()){
-						if(!vRePagClient->ucInfo) vRePagClient->Lese(&pRePagServer->ucInfo, BY_BYTE);
-					}
-				}
-			}
-
-			if(vRePagClient->ucInfo){
-				if(!--ucVersuche){ pRePagServer->ucInfo = 1; char c11Zahl[11]; COStringA asEintrag("DBEncryptInitial - Fehler bei Verbindung zu Server: ");
 					asEintrag += ULONGtoCHAR(c11Zahl, ucServer); FehlerEintrag(vRePagClient, &stAdminServer, asEintrag.c_Str());
 				}
 			}
